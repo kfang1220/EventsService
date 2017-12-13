@@ -1,14 +1,14 @@
-const initOptions = {
-  // pg-promise initialization options...
-  connect(client, dc, isFresh) {
-    const cp = client.connectionParameters;
-    console.log('Connected to database:', cp.database);
-  }
-
-};
+// const initOptions = {
+//   // pg-promise initialization options...
+//   connect(client, dc, isFresh) {
+//     const cp = client.connectionParameters;
+//     console.log('Connected to database:', cp.database);
+//   }
+//
+// };
 
 // Loading and initializing the library:
-const pgp = require('pg-promise')(initOptions);
+const pgp = require('pg-promise');
 const Promise = require('bluebird');
 
 
@@ -16,8 +16,8 @@ const configObj = {
   host: 'localhost',
   port: 5432,
   database: 'events',
-  user: 'will',
-  password: 'kory',
+  user: 'kevinfang',
+  password: '',
 };
 
 const db = pgp(configObj);
@@ -47,4 +47,3 @@ const db = pgp(configObj);
 // Exporting the database object for shared use:
 //module.exports.selectAll = selectAllUsers;
 module.exports.db = db;
-module.exports.initialize = initialize;
