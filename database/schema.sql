@@ -1,10 +1,13 @@
+-- psql postgres -U kevinfang < database/schema.sql
+
 DROP DATABASE IF EXISTS events;
 
 CREATE DATABASE events;
 
 \connect events;
+
 -- ---
--- Table 'calendar'
+-- Table 'users'
 --
 -- ---
 
@@ -13,24 +16,39 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   user_id INTEGER NOT NULL,
   user_name VARCHAR(30) NOT NULL,
-  location VARCHAR(30) NOT NULL,
+  location_id INTEGER NOT NULL,
   PRIMARY KEY (user_id)
 );
 
+-- ---
+-- Table 'location'
+--
+-- ---
+
+DROP TABLE IF EXISTS location;
+
+CREATE TABLE location (
+  id_location SERIAL NOT NULL,
+  location_name VARCHAR(30) NOT NULL,
+  PRIMARY KEY (id_location)
+);
+
+-- ---
+-- Table 'calendar'
+--
+-- ---
 
 DROP TABLE IF EXISTS calendar;
 
 CREATE TABLE calendar (
   date_id SERIAL NOT NULL,
-  date INTEGER NOT NULL
+  date_of_month INTEGER NOT NULL,
   day INTEGER NOT NULL,
   week INTEGER NOT NULL,
   month INTEGER NOT NULL,
   year INTEGER NOT NULL,
   PRIMARY KEY (date_id)
 );
-
-
 -- ---
 -- Table 'userSongStatistics'
 --
@@ -100,7 +118,7 @@ CREATE TABLE songSession (
 --
 -- ---
 
-DROP TABLE IF EXISTS location;
+-- DROP TABLE IF EXISTS location;
 
 -- CREATE TABLE location (
 --   id SERIAL,
@@ -160,7 +178,8 @@ ALTER TABLE userQueryStatistics ADD FOREIGN KEY (date_id_calendar) REFERENCES ca
 ALTER TABLE songSession ADD FOREIGN KEY (user_id_users) REFERENCES users (user_id);
 ALTER TABLE songSession ADD FOREIGN KEY (date_id_calendar) REFERENCES calendar (date_id);
 ALTER TABLE songSession ADD FOREIGN KEY (song_chunk_id_songChunks) REFERENCES songChunks (song_chunk_id);
--- ALTER TABLE users ADD FOREIGN KEY (id_location) REFERENCES location (id);
+-- ALTER TABLE users ADD FOREIGN KEY (location_id) REFERENCES location (id_location);
+ALTER TABLE users ADD FOREIGN KEY (location_id) REFERENCES location (id_location);
 -- ALTER TABLE location ADD FOREIGN KEY (id_city) REFERENCES city (id);
 -- ALTER TABLE location ADD FOREIGN KEY (id_stateProvidence) REFERENCES stateProvidence (id);
 -- ALTER TABLE location ADD FOREIGN KEY (id_country) REFERENCES country (id);
