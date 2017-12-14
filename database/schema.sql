@@ -8,6 +8,16 @@ CREATE DATABASE events;
 --
 -- ---
 
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+  user_id INTEGER NOT NULL,
+  user_name VARCHAR(30) NOT NULL,
+  id_location INTEGER NOT NULL,
+  PRIMARY KEY (user_id)
+);
+
+
 DROP TABLE IF EXISTS calendar;
 
 CREATE TABLE calendar (
@@ -19,16 +29,6 @@ CREATE TABLE calendar (
   PRIMARY KEY (date_id)
 );
 
-
-
-DROP TABLE IF EXISTS users;
-
-CREATE TABLE users (
-  user_id INTEGER NOT NULL,
-  user_name VARCHAR(30) NOT NULL,
-  id_location INTEGER NOT NULL,
-  PRIMARY KEY (user_id)
-);
 
 -- ---
 -- Table 'userSongStatistics'
@@ -73,7 +73,6 @@ DROP TABLE IF EXISTS songChunks;
 
 CREATE TABLE songChunks (
   song_chunk_id SERIAL,
-  start_time INTEGER NOT NULL,
   chunk_length INTEGER NOT NULL,
   PRIMARY KEY (song_chunk_id)
 );
@@ -90,10 +89,8 @@ CREATE TABLE songSession (
   user_id_users INTEGER NOT NULL ,
   date_id_calendar INTEGER NOT NULL,
   song_chunk_id_songChunks INTEGER NOT NULL,
-  song_title VARCHAR(30) NOT NULL,
   song_id INTEGER NOT NULL,
   song_length INTEGER NOT NULL,
-  id_location INTEGER NOT NULL,
   PRIMARY KEY (id)
 );
 
