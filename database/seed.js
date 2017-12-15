@@ -4,7 +4,7 @@ const initOptions = {
 const faker = require('faker');
 const Promise = require('bluebird');
 // const db = require('../database/index.js');
-// var pgp = require('pg-promise')({ promiseLib: Promise });
+var pgp = require('pg-promise')({ promiseLib: Promise });
 const shortid = require('shortid');
 
 
@@ -21,7 +21,7 @@ const dropUsers = 'DROP TABLE IF EXISTS users';
 //     PRIMARY KEY (user_id)
 //   )`;
 
-const insertUserValues = 'INSERT INTO users (name, userId, location) VALUES (?, ?, ?);';
+const insertUserValues = 'INSERT INTO users (name, userId, location) VALUES (?, ?, ?)';
 
 let states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Federated States of Micronesia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
   'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Marshall Islands', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina',
@@ -37,7 +37,7 @@ const configObj = {
   password: 'weewfwe'
 };
 
-const pgp = require('pg-promise')(initOptions);
+// const pgp = require('pg-promise')(initOptions);
 
 // using an invalid connection string:
 const db = pgp('postgresql://kevinfang:\'\'@localhost:5432/events');
@@ -60,7 +60,7 @@ db.connect()
       let location = Math.floor(Math.random() * (50)) + 1;
 
 
-      let promise = db.query(insertUserValues, name);
+      let promise = db.query(insertUserValues, [name, userId, location]);
       // .then(() => connection.query(insertIntoJoin, [user, name]));
       promises.push(promise);
     }
