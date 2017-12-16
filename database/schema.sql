@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
   user_id INTEGER NOT NULL,
-  user_name VARCHAR(30) NOT NULL,
+  user_name VARCHAR(100) NOT NULL,
   location_id INTEGER NOT NULL,
   PRIMARY KEY (user_id)
 );
@@ -42,9 +42,9 @@ DROP TABLE IF EXISTS calendar;
 
 CREATE TABLE calendar (
   date_id SERIAL NOT NULL,
-  date_of_month DATE NOT NULL,
+  month_date_year DATE NOT NULL,
   day INTEGER NOT NULL,
-  week INTEGER NOT NULL,
+  week INTEGER NULL,
   month INTEGER NOT NULL,
   year INTEGER NOT NULL,
   PRIMARY KEY (date_id)

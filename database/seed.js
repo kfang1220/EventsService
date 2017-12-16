@@ -6,6 +6,7 @@ const Promise = require('bluebird');
 // const db = require('../database/index.js');
 var pgp = require('pg-promise')({ promiseLib: Promise });
 const shortid = require('shortid');
+const moment = require('moment');
 
 
 const dropDB = 'DROP DATABASE IF EXISTS events';
@@ -65,10 +66,11 @@ db.connect()
   .then(() => {
     let brokenPromises = [];
 
-    for (let i = 0; i < 100; i++) {
+    for (var i = 0; i < 100; i++) {
       let name = faker.name.findName();
       // let userId = shortid.generate();
-      let userId = (Math.floor(Math.random() * (100000)) + 1);
+      // let userId = (Math.floor(Math.random() * (100000)) + 1);
+      let userId = i + 1;
       let location = Math.floor(Math.random() * (50)) + 1;
 
 
@@ -88,13 +90,34 @@ db.connect()
     var year = dateObj.getUTCFullYear();
 
     newdate = month + '/' + day + '/' + year;
-    // 
-    // for (let i = 0; i < 100; i++) {
-    //
-    // }
+    // let today = db.query(current_timestamp);
+    // console.log(today);
+    for (let i = 0; i < 100; i++) {
+      let tempDate = moment().format();
+      let promise = db.query(`INSERT INTO calendar (month_date_year, day, month, year) VALUES ('${tempDate}', '${day}', '${month}', '${year}')`);
+      brokenPromises.push(promise);
+    }
+    return Promise.all(brokenPromises);
+  })
+  .then(() => console.log('Calendar Table Filled'))
+  .then(() => {
+    let brokenPromises = [];
 
+    for (var i = 0; i < 100; i++) {
+      let id = i + 1;
+      let dateId = i + 1;
+      let shufflePlay = (Math.floor(Math.random() * (100000)) + 1);
+      let regularPlay = (Math.floor(Math.random() * (100000)) + 1);
+      let shuffleSkip = (Math.floor(Math.random() * (100000)) + 1);
+      let regularSkip = (Math.floor(Math.random() * (100000)) + 1);
 
-  });
+      let promise = db.query(`INSERT INTO userSongStatistics (user_id_users, date_id_calendar, shuffle_play_count, regular_play_count, shuffle_skip_count, regular_skip_count) VALUES ('${id}', '${dateId}', '${shufflePlay}', '${regularPlay}', '${shuffleSkip}', '${regularSkip}')`);
+      brokenPromises.push(promise);
+    }
+    return Promise.all(brokenPromises);
+  })
+  .then(() => console.log('userSongStatistics Table Filled'));
+
 //
 //
 // });
