@@ -21,9 +21,9 @@ const dropUsers = 'DROP TABLE IF EXISTS users';
 //     PRIMARY KEY (user_id)
 //   )`;
 
-const insertUserValues = 'INSERT INTO users (name, userId, location) VALUES (?, ?, ?)';
+const insertUserValues = 'INSERT INTO users (user_id, user_name, location_id) VALUES (?, ?, ?)';
 
-let states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Federated States of Micronesia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
+let states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
   'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Marshall Islands', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina',
   'North Dakota', 'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico', 'Rhode Island',
   'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virgin Island', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
@@ -52,22 +52,52 @@ db.connect()
     console.log('error');
   })
   .then(() => {
-    const promises = [];
+    let brokenPromises = [];
 
-    for (var i = 0; i < 10; i++) {
+    for (let i = 0; i < 50; i++) {
+      let location = faker.address.state();
+      let promise = db.query(`INSERT INTO location (location_name) VALUES ('${states[i]}')`);
+      brokenPromises.push(promise);
+    }
+    return Promise.all(brokenPromises);
+  })
+  .then(() => console.log('Locations Table Filled'))
+  .then(() => {
+    let brokenPromises = [];
+
+    for (let i = 0; i < 100; i++) {
       let name = faker.name.findName();
-      let userId = shortid.generate();
+      // let userId = shortid.generate();
+      let userId = (Math.floor(Math.random() * (100000)) + 1);
       let location = Math.floor(Math.random() * (50)) + 1;
 
 
-      let promise = db.query(insertUserValues, [name, userId, location]);
+      let promise = db.query(`INSERT INTO users (user_id, user_name, location_id) VALUES ('${userId}', '${name}', '${location}')`);
       // .then(() => connection.query(insertIntoJoin, [user, name]));
-      promises.push(promise);
+      brokenPromises.push(promise);
     }
-    return Promise.all(promises);
+    return Promise.all(brokenPromises);
+  })
+  .then(() => console.log('Users Table Filled'))
+  .then(() => {
+    let brokenPromises = [];
+
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1; //months from 1-12
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+
+    newdate = month + '/' + day + '/' + year;
+    // 
+    // for (let i = 0; i < 100; i++) {
+    //
+    // }
 
 
   });
+//
+//
+// });
 // .then(() => db.query(dropDB))
 // .then(() => db.query(createDB))
 // .then(() => db.query(connectDB))

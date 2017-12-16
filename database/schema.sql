@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS calendar;
 
 CREATE TABLE calendar (
   date_id SERIAL NOT NULL,
-  date_of_month INTEGER NOT NULL,
+  date_of_month DATE NOT NULL,
   day INTEGER NOT NULL,
   week INTEGER NOT NULL,
   month INTEGER NOT NULL,
