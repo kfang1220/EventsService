@@ -49,9 +49,7 @@ const db = pgp('postgresql://kevinfang:\'\'@localhost:5432/events');
 */
 db.connect()
   .then(() => console.log('successful connectuon'))
-  .catch(error => {
-    console.log('error');
-  })
+  .catch(error => console.log('error'))
   .then(() => {
     let brokenPromises = [];
 
@@ -62,12 +60,14 @@ db.connect()
     }
     return Promise.all(brokenPromises);
   })
+  .catch(error => console.log('EROR INSERTING STATES'))
   .then(() => console.log('Locations Table Filled'))
   .then(() => {
     let brokenPromises = [];
 
-    for (var i = 0; i < 100; i++) {
-      let name = faker.name.findName();
+    for (var i = 0; i < 100000; i++) {
+      let name = 'Andrew';
+      // console.log(name);
       // let userId = shortid.generate();
       // let userId = (Math.floor(Math.random() * (100000)) + 1);
       let userId = i + 1;
@@ -80,6 +80,7 @@ db.connect()
     }
     return Promise.all(brokenPromises);
   })
+  .catch(error => console.log(error, 'EROR INSERTING USERS'))
   .then(() => console.log('Users Table Filled'))
   .then(() => {
     let brokenPromises = [];
@@ -92,18 +93,19 @@ db.connect()
     newdate = month + '/' + day + '/' + year;
     // let today = db.query(current_timestamp);
     // console.log(today);
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 100000; i++) {
       let tempDate = moment().format();
       let promise = db.query(`INSERT INTO calendar (month_date_year, day, month, year) VALUES ('${tempDate}', '${day}', '${month}', '${year}')`);
       brokenPromises.push(promise);
     }
     return Promise.all(brokenPromises);
   })
+  .catch(error => console.log('EROR INSERTING CALENDAR DATES', error))
   .then(() => console.log('Calendar Table Filled'))
   .then(() => {
     let brokenPromises = [];
 
-    for (var i = 0; i < 100; i++) {
+    for (let i = 0; i < 100000; i++) {
       let id = i + 1;
       let dateId = i + 1;
       let shufflePlay = (Math.floor(Math.random() * (100000)) + 1);
@@ -116,7 +118,51 @@ db.connect()
     }
     return Promise.all(brokenPromises);
   })
-  .then(() => console.log('userSongStatistics Table Filled'));
+  .then(() => console.log('userSongStatistics Table Filled'))
+  .then(() => {
+    let brokenPromises = [];
+
+    for (let i = 0; i < 100000; i ++) {
+      let id = i + 1;
+      let dateId = i + 1;
+      let query = faker.internet.domainWord();
+      let queryCount = (Math.floor(Math.random() * (10000)) + 1);
+
+      let promise = db.query(`INSERT INTO userQueryStatistics (user_id_users, date_id_calendar, query_string, query_count) VALUES ('${id}', '${dateId}', '${query}', '${queryCount}')`);
+      brokenPromises.push(promise);
+    }
+    return Promise.all(brokenPromises);
+  })
+  .then(() => console.log('userQueryStatistics Table Filled'))
+  .then(() => {
+    let brokenPromises = [];
+
+    for (let i = 0; i < 100000; i++) {
+      let id = i + 1;
+      let dateId = i + 1;
+      let songId = i + 1;
+      let songLength = (Math.floor((Math.random() * 5) + 1)) * 100;
+
+      let promise = db.query(`INSERT INTO songSession (user_id_users, date_id_calendar, song_id, song_length) VALUES ('${id}', '${dateId}', '${songId}', '${songLength}')`);
+      brokenPromises.push(promise);
+    }
+    return Promise.all(brokenPromises);
+  })
+  .then(() => console.log('songSession Table Filled'))
+  .then(() => {
+    let brokenPromises = [];
+
+    for (let i = 0; i < 100000; i++) {
+      let songId = i + 1;
+      for (let j = 0; j < 5; j++) {
+        let seconds = (Math.floor((Math.random() * 60) + 1));
+        let promise = db.query(`INSERT INTO songChunks (chunk_length, song_id) VALUES ('${seconds}', '${songId}')`);
+        brokenPromises.push(promise);
+      }
+    }
+    return Promise.all(brokenPromises);
+  })
+  .then(() => console.log('songChunks Table Filled'));
 
 //
 //

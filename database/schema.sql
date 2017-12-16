@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
   user_id INTEGER NOT NULL,
-  user_name VARCHAR(100) NOT NULL,
+  user_name VARCHAR(300) NOT NULL,
   location_id INTEGER NOT NULL,
   PRIMARY KEY (user_id)
 );
@@ -29,7 +29,7 @@ DROP TABLE IF EXISTS location;
 
 CREATE TABLE location (
   id_location SERIAL NOT NULL,
-  location_name VARCHAR(30) NOT NULL,
+  location_name VARCHAR(300) NOT NULL,
   PRIMARY KEY (id_location)
 );
 
@@ -78,7 +78,7 @@ CREATE TABLE userQueryStatistics (
   id SERIAL,
   user_id_users INTEGER NOT NULL ,
   date_id_calendar INTEGER NOT NULL,
-  query_string VARCHAR(30) NOT NULL,
+  query_string VARCHAR(300) NOT NULL,
   query_count INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 );
@@ -92,6 +92,7 @@ DROP TABLE IF EXISTS songChunks;
 
 CREATE TABLE songChunks (
   song_chunk_id SERIAL,
+  song_id INTEGER NOT NULL,
   chunk_length INTEGER NOT NULL,
   PRIMARY KEY (song_chunk_id)
 );
@@ -107,10 +108,10 @@ CREATE TABLE songSession (
   id SERIAL,
   user_id_users INTEGER NOT NULL ,
   date_id_calendar INTEGER NOT NULL,
-  song_chunk_id_songChunks INTEGER NOT NULL,
+  -- song_chunk_id_songChunks INTEGER NOT NULL,
   song_id INTEGER NOT NULL,
   song_length INTEGER NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (song_id)
 );
 
 -- ---
@@ -177,7 +178,7 @@ ALTER TABLE userQueryStatistics ADD FOREIGN KEY (user_id_users) REFERENCES users
 ALTER TABLE userQueryStatistics ADD FOREIGN KEY (date_id_calendar) REFERENCES calendar (date_id);
 ALTER TABLE songSession ADD FOREIGN KEY (user_id_users) REFERENCES users (user_id);
 ALTER TABLE songSession ADD FOREIGN KEY (date_id_calendar) REFERENCES calendar (date_id);
-ALTER TABLE songSession ADD FOREIGN KEY (song_chunk_id_songChunks) REFERENCES songChunks (song_chunk_id);
+ALTER TABLE songChunks ADD FOREIGN KEY (song_id) REFERENCES songSession (song_id);
 -- ALTER TABLE users ADD FOREIGN KEY (location_id) REFERENCES location (id_location);
 ALTER TABLE users ADD FOREIGN KEY (location_id) REFERENCES location (id_location);
 -- ALTER TABLE location ADD FOREIGN KEY (id_city) REFERENCES city (id);
