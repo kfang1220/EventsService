@@ -41,8 +41,8 @@ CREATE TABLE location (
 DROP TABLE IF EXISTS calendar;
 
 CREATE TABLE calendar (
-  date_id SERIAL NOT NULL,
-  month_date_year DATE NOT NULL,
+  date_id SERIAL,
+  -- month_date_year DATE NOT NULL,
   day INTEGER NOT NULL,
   week INTEGER NULL,
   month INTEGER NOT NULL,
@@ -59,7 +59,7 @@ DROP TABLE IF EXISTS userSongStatistics;
 CREATE TABLE userSongStatistics (
   id SERIAL,
   user_id_users INTEGER NOT NULL ,
-  date_id_calendar INTEGER NOT NULL,
+  date_id INTEGER NOT NULL,
   shuffle_play_count INTEGER NOT NULL DEFAULT 0,
   regular_play_count INTEGER NOT NULL DEFAULT 0,
   shuffle_skip_count INTEGER NOT NULL DEFAULT 0,
@@ -77,7 +77,7 @@ DROP TABLE IF EXISTS userQueryStatistics;
 CREATE TABLE userQueryStatistics (
   id SERIAL,
   user_id_users INTEGER NOT NULL ,
-  date_id_calendar INTEGER NOT NULL,
+  date_id INTEGER NOT NULL,
   query_string VARCHAR(300) NOT NULL,
   query_count INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
@@ -107,7 +107,7 @@ DROP TABLE IF EXISTS songSession;
 CREATE TABLE songSession (
   id SERIAL,
   user_id_users INTEGER NOT NULL ,
-  date_id_calendar INTEGER NOT NULL,
+  date_id INTEGER NOT NULL,
   -- song_chunk_id_songChunks INTEGER NOT NULL,
   song_id INTEGER NOT NULL,
   song_length INTEGER NOT NULL,
@@ -173,11 +173,11 @@ DROP TABLE IF EXISTS stateProvidence;
 -- ---
 
 ALTER TABLE userSongStatistics ADD FOREIGN KEY (user_id_users) REFERENCES users (user_id);
-ALTER TABLE userSongStatistics ADD FOREIGN KEY (date_id_calendar) REFERENCES calendar (date_id);
+ALTER TABLE userSongStatistics ADD FOREIGN KEY (date_id) REFERENCES calendar (date_id);
 ALTER TABLE userQueryStatistics ADD FOREIGN KEY (user_id_users) REFERENCES users (user_id);
-ALTER TABLE userQueryStatistics ADD FOREIGN KEY (date_id_calendar) REFERENCES calendar (date_id);
+ALTER TABLE userQueryStatistics ADD FOREIGN KEY (date_id) REFERENCES calendar (date_id);
 ALTER TABLE songSession ADD FOREIGN KEY (user_id_users) REFERENCES users (user_id);
-ALTER TABLE songSession ADD FOREIGN KEY (date_id_calendar) REFERENCES calendar (date_id);
+ALTER TABLE songSession ADD FOREIGN KEY (date_id) REFERENCES calendar (date_id);
 ALTER TABLE songChunks ADD FOREIGN KEY (song_id) REFERENCES songSession (song_id);
 -- ALTER TABLE users ADD FOREIGN KEY (location_id) REFERENCES location (id_location);
 ALTER TABLE users ADD FOREIGN KEY (location_id) REFERENCES location (id_location);
