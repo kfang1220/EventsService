@@ -92,7 +92,7 @@ DROP TABLE IF EXISTS songChunks;
 
 CREATE TABLE songChunks (
   song_chunk_id SERIAL,
-  song_id INTEGER NOT NULL,
+  song_session_id INTEGER NOT NULL,
   chunk_length INTEGER NOT NULL,
   PRIMARY KEY (song_chunk_id)
 );
@@ -111,7 +111,7 @@ CREATE TABLE songSession (
   -- song_chunk_id_songChunks INTEGER NOT NULL,
   song_id INTEGER NOT NULL,
   song_length INTEGER NOT NULL,
-  PRIMARY KEY (song_id)
+  PRIMARY KEY (id)
 );
 
 -- ---
@@ -178,7 +178,7 @@ ALTER TABLE userQueryStatistics ADD FOREIGN KEY (user_id_users) REFERENCES users
 ALTER TABLE userQueryStatistics ADD FOREIGN KEY (date_id) REFERENCES calendar (date_id);
 ALTER TABLE songSession ADD FOREIGN KEY (user_id_users) REFERENCES users (user_id);
 ALTER TABLE songSession ADD FOREIGN KEY (date_id) REFERENCES calendar (date_id);
-ALTER TABLE songChunks ADD FOREIGN KEY (song_id) REFERENCES songSession (song_id);
+ALTER TABLE songChunks ADD FOREIGN KEY (song_session_id) REFERENCES songSession (id);
 -- ALTER TABLE users ADD FOREIGN KEY (location_id) REFERENCES location (id_location);
 ALTER TABLE users ADD FOREIGN KEY (location_id) REFERENCES location (id_location);
 -- ALTER TABLE location ADD FOREIGN KEY (id_city) REFERENCES city (id);

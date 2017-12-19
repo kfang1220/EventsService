@@ -13,7 +13,7 @@ const Promise = require('bluebird');
 
 const configObj = {
   host: 'localhost',
-  port: 3000,
+  port: 5432,
   database: 'events',
   user: 'kevinfang',
   password: '',

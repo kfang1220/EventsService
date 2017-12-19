@@ -53,7 +53,7 @@ db.connect()
   .then(() => console.log('Locations Table Filled'))
   .then(() => {
     let brokenPromises = [];
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 1000; i++) {
       let name = 'Andrew';
       // console.log(name);
       // let userId = shortid.generate();
@@ -79,7 +79,7 @@ db.connect()
     // newdate = month + '/' + day + '/' + year;
     // let today = db.query(current_timestamp);
     // console.log(today);
-    for (let i = 1; i < 366; i++) {
+    for (let i = 0; i < 365; i++) {
       // let tempDate = moment().format();
       dateObj = new Date(new Date().getTime() + (i * 24) * 60 * 60 * 1000);
       var day = dateObj.getUTCDate();
@@ -117,7 +117,7 @@ db.connect()
     let brokenPromises = [];
     for (let j = 0; j < 365; j++) {
       let dateId = j + 1;
-      for (let i = 0; i < 100; i ++) {
+      for (let i = 0; i < 200; i ++) {
         let id = i + 1;
         let query = faker.internet.domainWord();
         let queryCount = (Math.floor(Math.random() * (10000)) + 1);
@@ -134,12 +134,12 @@ db.connect()
     let m = 0;
     for (let j = 0; j < 365; j++) {
       let dateId = j + 1;
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 200; i++) {
         let id = i + 1;
-        for (let k = 0; k < 5; k++) {
+        for (let k = 0; k < 3; k++) {
           let songId = m + 1;
           m++;
-          let songLength = (Math.floor((Math.random() * 5) + 1)) * 100;
+          let songLength = (Math.floor((Math.random() * 3) + 1)) * 100;
           let promise = db.query(`INSERT INTO songSession (user_id_users, date_id, song_id, song_length) VALUES (${id}, ${dateId}, ${songId}, ${songLength})`);
           brokenPromises.push(promise);
         }
@@ -151,11 +151,11 @@ db.connect()
   .then(() => console.log('songSession Table Filled'))
   .then(() => {
     let brokenPromises = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 500; i++) {
       let songId = i + 1;
       for (let j = 0; j < 5; j++) {
         let seconds = (Math.floor((Math.random() * 60) + 1));
-        let promise = db.query(`INSERT INTO songChunks (chunk_length, song_id) VALUES ('${seconds}', '${songId}')`);
+        let promise = db.query(`INSERT INTO songChunks (chunk_length, song_session_id) VALUES ('${seconds}', '${songId}')`);
         brokenPromises.push(promise);
       }
     }
