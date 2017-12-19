@@ -11,10 +11,9 @@ const initOptions = {
 const pgp = require('pg-promise')(initOptions);
 const Promise = require('bluebird');
 
-
 const configObj = {
   host: 'localhost',
-  port: 3000,
+  port: 5432,
   database: 'events',
   user: 'kevinfang',
   password: '',
