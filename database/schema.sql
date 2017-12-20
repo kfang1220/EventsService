@@ -134,7 +134,7 @@ CREATE TABLE songSession (
 --
 -- ---
 
-DROP TABLE IF EXISTS city;
+-- DROP TABLE IF EXISTS city;
 
 -- CREATE TABLE city (
 --   id SERIAL,
@@ -147,7 +147,7 @@ DROP TABLE IF EXISTS city;
 --
 -- ---
 
-DROP TABLE IF EXISTS country;
+-- DROP TABLE IF EXISTS country;
 
 -- CREATE TABLE country (
 --   id SERIAL,
@@ -160,7 +160,7 @@ DROP TABLE IF EXISTS country;
 --
 -- ---
 
-DROP TABLE IF EXISTS stateProvidence;
+-- DROP TABLE IF EXISTS stateProvidence;
 
 -- CREATE TABLE stateProvidence (
 --   id SERIAL,

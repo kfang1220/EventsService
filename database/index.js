@@ -2,12 +2,13 @@ const initOptions = {
   // pg-promise initialization options...
   connect(client, dc, isFresh) {
     const cp = client.connectionParameters;
-    console.log('Connected to database:', cp.database);
+    //console.log('Connected to database:', cp.database);
   }
 
 };
 
 // Loading and initializing the library:
+const redis = require('redis');
 const pgp = require('pg-promise')(initOptions);
 const Promise = require('bluebird');
 
