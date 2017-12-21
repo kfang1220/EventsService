@@ -12,7 +12,7 @@ var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 let queueUrl = 'https://sqs.us-west-1.amazonaws.com/464657596304/playClick';
 
 const sendSQS = () => {
-  var params = {
+  let playClickSQS = {
     DelaySeconds: 10,
     MessageAttributes: {
       user: {
@@ -25,11 +25,11 @@ const sendSQS = () => {
       },
       shuffle: {
         DataType: 'Number',
-        StringValue: '1'
+        StringValue: `${Math.round(Math.random())}`
       },
       skip: {
         DataType: 'Number',
-        StringValue: '0'
+        StringValue: `${Math.round(Math.random())}`
       },
       songLength: {
         DataType: 'Number',
@@ -39,6 +39,42 @@ const sendSQS = () => {
     MessageBody: 'INFORMATION KORY AND WILL, WILL BE SENDING ME',
     QueueUrl: queueUrl
   };
+
+  let querySQS = {
+    DelaySeconds: 10,
+    MessageAttributes: {
+      user: {
+        DataType: 'Number',
+        StringValue: `${(Math.floor(Math.random() * (1000)) + 1)}`
+      },
+      query: {
+        DataType: 'String',
+        StringValue: `${(Math.floor(Math.random() * (500)) + 1)}`
+      },
+    },
+    MessageBody: 'THIS IS A QUERY SQS SENT BY KORY OR WILL',
+    QueueUrl: queueUrl
+  };
+
+  let songChunkSQS = {
+    DelaySeconds: 10,
+    MessageAttributes: {
+      user: {
+        DataType: 'Number',
+        StringValue: `${(Math.floor(Math.random() * (100)) + 1)}`
+      },
+      chunkLength: {
+        DataType: 'String',
+        StringValue: '10'
+      },
+    },
+    MessageBody: 'THIS IS A SONGCHUNKS SQS SENT BY KORY OR WILL',
+    QueueUrl: queueUrl
+  };
+
+  //GENERATING A RANDOM DIFFERENT SQS- WHAT IS ENGLISH
+  let paramsArray = [playClickSQS, querySQS, songChunkSQS];
+  let params = paramsArray[(Math.floor(Math.random() * (3)) + 1) - 1];
 
   sqs.sendMessage(params, function(err, data) {
     if (err) {
@@ -65,7 +101,7 @@ const getSQS = () => {
 
   sqs.receiveMessage(params, (error, data) => {
     if (error) {
-      console.log('There is an error receiving Message from Event Queue', error);
+      console.log('There is an error receiving Message from Event Queue');
     } else if (data.Messages) {
 
       /* THIS IS THE OBJECT THAT IS SENT BY STREAMING OR CLIENT */
@@ -82,72 +118,77 @@ const getSQS = () => {
 
       */
       //console.log(data);
-      console.log(clickPlayObject, ' EASAKESAKESAKESAKESEASAERK');
+      //console.log(clickPlayObject,' EASAKESAKESAKESAKESEASAERK');
       if (clickPlayObject.MessageAttributes.shuffle) {
-        console.log('SAVE ME PLEASE');
+        //console.log('SAVE ME PLEASE');
+        console.log('GETTING INTO CLICKPLAY');
         axios.post('http://localhost:3000/playClick', clickPlayObject.MessageAttributes)
           .then(() => {
             let deleteParams = {
               QueueUrl: queueUrl,
               ReceiptHandle: clickPlayObject.ReceiptHandle,
             };
-            console.log(deleteParams, 'weflbihagyagpgpuerhgeiaugbpabgeapubgerguberaugbeapgbegrbegeuabigpeurb');
+            //console.log(deleteParams, "weflbihagyagpgpuerhgeiaugbpabgeapubgerguberaugbeapgbegrbegeuabigpeurb");
             sqs.deleteMessage(deleteParams, (error, data) => {
               if (error) {
-                console.log('Event Queue error, couldn\'t be deleted', error);
+                console.log('Event Queue error, couldn\'t be deleted');
               } else {
-                console.log('Event Queue successfully deleted', data);
+                console.log('Event Queue successfully deleted');
               }
             });
           })
           .catch(error => {
             console.log(error);
           });
+      } else if (clickPlayObject.MessageAttributes.query) {
+        console.log('GETTING INTO QUERY');
+        axios.post('http://localhost:3000/searchQueries', clickPlayObject.MessageAttributes)
+          .then(() => {
+            let deleteParams = {
+              QueueUrl: queueUrl,
+              ReceiptHandle: clickPlayObject.ReceiptHandle,
+            };
+            sqs.deleteMessage(deleteParams, (error, data) => {
+              if (error) {
+                console.log('Event Queue Query error, couldn\'t be deleted');
+              } else {
+                console.log('Event Queue Query successfully deleted');
+              }
+            });
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (clickPlayObject.MessageAttributes.chunkLength) {
+        console.log('GETTING INTO CHUNKS');
+        axios.post('http://localhost:3000/songChunks', clickPlayObject.MessageAttributes)
+          .then(() => {
+            let deleteParams = {
+              QueueUrl: queueUrl,
+              ReceiptHandle: clickPlayObject.ReceiptHandle,
+            };
+            sqs.deleteMessage(deleteParams, (error, data) => {
+              if (error) {
+                console.log('Event Queue songChunks error, couldn\'t be deleted');
+              } else {
+                console.log('Event Queue songChunks successfully deleted');
+              }
+            });
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else {
+        console.log('error in GET');
       }
-      // else if (clickPlayObject.MessageAttributes.query) {
-      //   axios.post('http://localhost:5432/searchQueries', clickPlayObject.MessageAttributes)
-      //     .then(response => {
-      //       const deleteParams = {
-      //         QueueUrl: queueUrl,
-      //         ReceiptHandle: clickPlayObject.ReceiptHandle,
-      //       };
-      //       sqs.deleteMessage(deleteParams, (error, data) => {
-      //         if (error) {
-      //           console.log('Event Queue Query error, couldn\'t be deleted', error);
-      //         } else {
-      //           console.log('Event Queue Query successfully deleted', data);
-      //         }
-      //       });
-      //     })
-      //     .catch(error => {
-      //       console.log(error);
-      //     });
-      // } else {
-      //   axios.post('http://localhost:5432/songChunks', clickPlayObject.MessageAttributes)
-      //     .then(response => {
-      //       const deleteParams = {
-      //         QueueUrl: queueUrl,
-      //         ReceiptHandle: clickPlayObject.ReceiptHandle,
-      //       };
-      //       sqs.deleteMessage(deleteParams, (error, data) => {
-      //         if (error) {
-      //           console.log('Event Queue songChunks error, couldn\'t be deleted', error);
-      //         } else {
-      //           console.log('Event Queue songChunks successfully deleted', data);
-      //         }
-      //       });
-      //     })
-      //     .catch(error => {
-      //       console.log(error);
-      //     });
-      // }
     }
   });
 };
 
-
+// for (let i = 0; i < 5; i++) {
+// }
 // sendSQS();
 getSQS();
 
-module.exports.sendSQS = sendSQS;
+// module.exports.sendSQS = sendSQS;
 module.exports.getSQS = getSQS;
