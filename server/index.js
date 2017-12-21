@@ -78,7 +78,8 @@ Update songSessionTable
 */
 
 //example object {userId: value, songId, shufle: bool, skip:bool}
-app.get('/playClick', (req, res) => {
+app.post('/playClick', (req, res) => {
+  console.log('DO I EVEN GET IN HERE???????????');
   /*############################### MOCK DATA ###############################*/
   let fakeData = {
     user: (Math.floor(Math.random() * (1000)) + 1),
@@ -88,12 +89,13 @@ app.get('/playClick', (req, res) => {
     songLength: (Math.floor((Math.random() * 3) + 1)) * 100
   };
   /*############################### MOCK DATA ###############################*/
-  let date = {};
+  // let date = {};
 
-  let user = fakeData.user;
-  let song = fakeData.song;
-  let shuffle = fakeData.shuffle;
-  let skip = fakeData.skip;
+  //console.log(req.body);
+  let user = req.body.user;
+  let song = req.body.song;
+  let shuffle = req.body.shuffle;
+  let skip = req.body.skip;
   let songLength = fakeData.songLength;
   // USER TABLE INFORMATION
 
@@ -207,45 +209,48 @@ app.get('/playClick', (req, res) => {
           });
       });
   } else {
-    db.query(`SELECT date_id FROM calendar
-              WHERE day = ${CurrentDay}
-              AND month = ${CurrentMonth}
-              AND year = ${CurrentYear}`)
-      .then((data) => {
-        currentDateId = data[0].date_id;
-        db.query(`SELECT * FROM userSongStatistics
-          WHERE user_id_users = ${user} AND date_id = ${currentDateId}`)
-          .then((data) => {
-            // console.log(data);
-            if (data.length === 0) {
-              db.query(`INSERT INTO userSongStatistics
-                      (user_id_users, date_id, shuffle_play_count, regular_play_count, shuffle_skip_count, regular_skip_count)
-                      VALUES (${user}, ${currentDateId}, 0, 0, 0, 1)`)
-                .catch(err => console.log(err))
-                .then(() => {
-                  res.status(201);
-                  res.json();
-                });
-            } else {
-              db.query(
-                `UPDATE userSongStatistics
-                 SET regular_skip_count = regular_skip_count + 1
-                 WHERE user_id_users = ${user} AND date_id = ${currentDateId}`)
-                .catch(() => console.log('ERROR HERE'))
-                .then(() => {
-                  db.query(`INSERT INTO songSession
-                          (user_id_users, date_id, song_id, song_length)
-                          VALUES (${user}, ${currentDateId}, ${song}, ${songLength})`);
-                })
-                .catch(() => console.log('ERROR IN SONGSESSION'))
-                .then(() => {
-                  res.status(201);
-                  res.json();
-                })
-                .catch(() => console.log('ERROR AFTER STATUS'));
-            }
-          });
-      });
+    console.log('easak');
+    res.status(201);
+    res.json();
+    // db.query(`SELECT date_id FROM calendar
+    //           WHERE day = ${CurrentDay}
+    //           AND month = ${CurrentMonth}
+    //           AND year = ${CurrentYear}`)
+    //   .then((data) => {
+    //     currentDateId = data[0].date_id;
+    //     db.query(`SELECT * FROM userSongStatistics
+    //       WHERE user_id_users = ${user} AND date_id = ${currentDateId}`)
+    //       .then((data) => {
+    //         // console.log(data);
+    //         if (data.length === 0) {
+    //           db.query(`INSERT INTO userSongStatistics
+    //                   (user_id_users, date_id, shuffle_play_count, regular_play_count, shuffle_skip_count, regular_skip_count)
+    //                   VALUES (${user}, ${currentDateId}, 0, 0, 0, 1)`)
+    //             .catch(err => console.log(err))
+    //             .then(() => {
+    //               res.status(201);
+    //               res.json();
+    //             });
+    //         } else {
+    //           db.query(
+    //             `UPDATE userSongStatistics
+    //              SET regular_skip_count = regular_skip_count + 1
+    //              WHERE user_id_users = ${user} AND date_id = ${currentDateId}`)
+    //             .catch(() => console.log('ERROR HERE'))
+    //             .then(() => {
+    //               db.query(`INSERT INTO songSession
+    //                       (user_id_users, date_id, song_id, song_length)
+    //                       VALUES (${user}, ${currentDateId}, ${song}, ${songLength})`);
+    //             })
+    //             .catch(() => console.log('ERROR IN SONGSESSION'))
+    //             .then(() => {
+    //               res.status(201);
+    //               res.json();
+    //             })
+    //             .catch(() => console.log('ERROR AFTER STATUS'));
+    //         }
+    //       });
+    //   });
   }
 });
 
