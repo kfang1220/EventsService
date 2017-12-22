@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 var AWS = require('aws-sdk');
 const faker = require('faker');
 // Set the region
-AWS.config.update({region: 'us-west-2'});
+AWS.config.update({region: 'us-west-1'});
 // axios.defaults.timeout =  100000;
 
 // Create an SQS service object
@@ -61,7 +61,7 @@ const sendSQS = () => {
     MessageAttributes: {
       user: {
         DataType: 'Number',
-        StringValue: `${(Math.floor(Math.random() * (100)) + 1)}`
+        StringValue: `${(Math.floor(Math.random() * (1000)) + 1)}`
       },
       chunkLength: {
         DataType: 'String',
@@ -185,10 +185,8 @@ const getSQS = () => {
   });
 };
 
-// for (let i = 0; i < 5; i++) {
-// }
-// sendSQS();
-getSQS();
-
-// module.exports.sendSQS = sendSQS;
-module.exports.getSQS = getSQS;
+for (let i = 0; i < 5; i++) {
+  // sendSQS();
+  setTimeout(getSQS, 3000);
+}
+// getSQS();

@@ -324,11 +324,11 @@ app.post('/songChunks', (req, res) => {
     chunkLength: 10
   };
 
-  // let user = req.body.user.StringValue;
-  // let length = req.body.chunkLength.StringValue;
+  let user = req.body.user.StringValue;
+  let length = req.body.chunkLength.StringValue;
 
-  let user = fakeData.user;
-  let length = fakeData.chunkLength;
+  // let user = fakeData.user;
+  // let length = fakeData.chunkLength;
 
   db.query(`SELECT date_id FROM calendar
             WHERE day = ${CurrentDay}
@@ -336,11 +336,11 @@ app.post('/songChunks', (req, res) => {
             AND year = ${CurrentYear}`)
     .then((data) => {
       let currentDateId = data[0].date_id;
-      db.query(`SELECT * FROM songSession WHERE user_id_users = 1 AND date_id = ${currentDateId}`)
+      db.query(`SELECT * FROM songSession WHERE user_id_users = ${user} AND date_id = ${currentDateId}`)
         .then((data) => {
 
           let currentSongId = data[data.length - 1].id;
-        
+          console.log(currentSongId);
           db.query(`INSERT INTO songChunks (song_session_id, chunk_length) VALUES (${currentSongId}, ${length})`)
             .then(() => {
               res.status(201);
