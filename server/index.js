@@ -79,6 +79,7 @@ Update songSessionTable
 
 //example object {userId: value, songId, shufle: bool, skip:bool}
 app.post('/playClick', (req, res) => {
+  // console.log(req.body);
   // console.log('DO I EVEN GET IN HERE???????????');
   // console.log('hello');
   // console.log(Number(req.body.user.StringValue));
@@ -95,11 +96,11 @@ app.post('/playClick', (req, res) => {
 
   //console.log(req.body);
 
-  let user = Number(req.body.user.StringValue);
-  let song = Number(req.body.song.StringValue);
-  let shuffle = Number(req.body.shuffle.StringValue);
-  let skip = Number(req.body.skip.StringValue);
-  let songLength = Number(req.body.songLength.StringValue);
+  let user = (req.body.user);
+  let song = (req.body.song);
+  let shuffle = (req.body.shuffle);
+  let skip = (req.body.skip);
+  let songLength = (req.body.songLength);
 
   // USER TABLE INFORMATION
 
@@ -108,7 +109,7 @@ app.post('/playClick', (req, res) => {
   // let shuffle = Math.round(Math.random());
   // let skip = Math.round(Math.random());
   // let songLength = (Math.floor((Math.random() * 3) + 1)) * 100;
-
+  //
 
   if (shuffle === 1 && skip === 0) {
     db.query(`SELECT date_id FROM calendar WHERE day = ${CurrentDay} AND month = ${CurrentMonth} AND year = ${CurrentYear}`)
@@ -276,10 +277,12 @@ app.post('/searchQueries', (req, res) => {
     user: (Math.floor(Math.random() * (1000)) + 1),
     query: faker.internet.domainWord()
   };
+  //
+  let user = req.body.user;
+  let query = req.body.query;
 
-  let user = req.body.user.StringValue;
-  // let song = req.body.song;
-  let query = req.body.query.StringValue;
+  // let user = fakeData.user;
+  // let query = fakeData.query;
 
   db.query(`SELECT date_id FROM calendar
             WHERE day = ${CurrentDay}
@@ -294,7 +297,7 @@ app.post('/searchQueries', (req, res) => {
           if (data.length === 0) {
             db.query(`INSERT INTO userQueryStatistics
                           (user_id_users, date_id, query_string)
-                          VALUES (${user}, ${currentDateId}, ${query})`)
+                          VALUES (${user}, ${currentDateId}, '${query}')`)
               .catch(err => console.log(err))
               .then(() => {
                 res.status(201);
@@ -318,15 +321,15 @@ app.post('/searchQueries', (req, res) => {
 
 
 app.post('/songChunks', (req, res) => {
-
+  console.log(req.body);
   let fakeData = {
-    user: (Math.floor(Math.random() * (1000)) + 1),
+    user: (Math.floor(Math.random() * (10)) + 1),
     chunkLength: 10
   };
 
-  let user = req.body.user.StringValue;
-  let length = req.body.chunkLength.StringValue;
-
+  let user = req.body.user;
+  let length = req.body.chunkLength;
+  //
   // let user = fakeData.user;
   // let length = fakeData.chunkLength;
 
@@ -338,7 +341,6 @@ app.post('/songChunks', (req, res) => {
       let currentDateId = data[0].date_id;
       db.query(`SELECT * FROM songSession WHERE user_id_users = ${user} AND date_id = ${currentDateId}`)
         .then((data) => {
-
           let currentSongId = data[data.length - 1].id;
           console.log(currentSongId);
           db.query(`INSERT INTO songChunks (song_session_id, chunk_length) VALUES (${currentSongId}, ${length})`)

@@ -5,12 +5,12 @@ var AWS = require('aws-sdk');
 const faker = require('faker');
 const Consumer = require('sqs-consumer');
 // Set the region
-AWS.config.update({region: 'us-west-1'});
+AWS.config.update({region: 'us-west-2'});
 // axios.defaults.timeout =  100000;
 
 // Create an SQS service object
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
-let queueUrl = 'https://sqs.us-west-1.amazonaws.com/464657596304/playClick';
+let queueUrl = 'https://sqs.us-west-2.amazonaws.com/464657596304/testfifo.fifo';
 
 const sendSQS = () => {
   let playClickSQS = {
@@ -235,20 +235,16 @@ const app = Consumer.create({
   }
 });
 
-for (let i = 0; i < 25; i++) {
-  sendSQS();
-  // setTimeout(getSQS, 3000);
-}
 
+// for (let i = 0; i < 20000; i++) {
+//   sendSQS();
+//   // setTimeout(getSQS, 3000);
+// }
 // getSQS();
 // sendSQS();
-
-
-// setInterval(function() {
-//   app.start();
-// }, 60 * 1000);
 
 app.on('error', (err) => {
   console.log(err.message);
 });
-// app.start();
+
+app.start();

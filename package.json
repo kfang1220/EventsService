@@ -29,7 +29,8 @@
     "pg": "^7.4.0",
     "pg-promise": "^7.3.2",
     "redis": "^2.8.0",
-    "shortid": "^2.2.8"
+    "shortid": "^2.2.8",
+    "sqs-consumer": "^3.8.0"
   },
   "devDependencies": {
     "nodemon": "^1.12.5"
