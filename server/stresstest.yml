@@ -9,4 +9,4 @@ config:
 scenarios:
   - flow:
     - post:
-        url: "/searchQueries"
+        url: "/playClick"
