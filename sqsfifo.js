@@ -202,9 +202,8 @@ const sendSQS = () => {
 let i = 0;
 const app = Consumer.create({
   queueUrl: queueUrl,
-  batchSize: 10,
+  batchSize: 20,
   handleMessage: (message, done) => {
-    i++;
     //console.log(JSON.parse(message.Body), 'THIS IS LINE 200');
     if ((JSON.parse(message.Body)).shuffle !== undefined) {
       // ++i;
@@ -223,7 +222,7 @@ const app = Consumer.create({
           done();
         });
     } else if ((JSON.parse(message.Body)).chunkLength !== undefined) {
-      // i++;
+      i++;
       axios.post('http://localhost:3000/songChunks', JSON.parse(message.Body))
         .then(() => {
           console.log(i);
@@ -236,7 +235,7 @@ const app = Consumer.create({
   }
 });
 const fillQueue = () => {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 3000; i++) {
     sendSQS();
     // setTimeout(getSQS, 3000);
   }
@@ -262,22 +261,18 @@ app.on('error', (err) => {
 //   }, 3000);
 // };
 
-// const everyFiveSeconds = () => {
-//   // const retrieveMessage = () => {
-//   app.start();
-//   setTimeout(() => {
-//     app.stop();
-//     console.log('stopped');
-//     setInterval(() => {
-//       everyFiveSeconds();
-//     }, 10000);
-//   }, 5000);
-//
-//   // };
-// };
+const everyFiveSeconds = () => {
+  // const retrieveMessage = () => {
+  app.start();
+  setTimeout(() => {
+    app.stop();
+    console.log('stopped');
+  }, 2000);
+  //app.stop();
+  //setInterval(everyFiveSeconds(), 5000);
+  // };
+};
 
-
-
-// everyFiveSeconds();
+everyFiveSeconds();
 // fillQueue();
-app.start();
+// app.start();

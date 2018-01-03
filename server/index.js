@@ -78,7 +78,11 @@ Update songSessionTable
 */
 
 //example object {userId: value, songId, shufle: bool, skip:bool}
-app.get('/playClick', (req, res) => {
+app.post('/playClick', (req, res) => {
+  // console.log(req.body);
+  // console.log('DO I EVEN GET IN HERE???????????');
+  // console.log('hello');
+  // console.log(Number(req.body.user.StringValue));
   /*############################### MOCK DATA ###############################*/
   let fakeData = {
     user: (Math.floor(Math.random() * (1000)) + 1),
@@ -88,20 +92,23 @@ app.get('/playClick', (req, res) => {
     songLength: (Math.floor((Math.random() * 3) + 1)) * 100
   };
   /*############################### MOCK DATA ###############################*/
-  let date = {};
+  // let date = {};
 
-  let user = fakeData.user;
-  let song = fakeData.song;
-  let shuffle = fakeData.shuffle;
-  let skip = fakeData.skip;
-  let songLength = fakeData.songLength;
+  //console.log(req.body);
+  //
+  // let user = (req.body.user);
+  // let song = (req.body.song);
+  // let shuffle = (req.body.shuffle);
+  // let skip = (req.body.skip);
+  // let songLength = (req.body.songLength);
+
   // USER TABLE INFORMATION
 
-  // let user = (Math.floor(Math.random() * (1000)) + 1);
-  // let song = (Math.floor(Math.random() * (500)) + 1);
-  // let shuffle = Math.round(Math.random());
-  // let skip = Math.round(Math.random());
-  // let songLength = (Math.floor((Math.random() * 3) + 1)) * 100;
+  let user = (Math.floor(Math.random() * (1000)) + 1);
+  let song = (Math.floor(Math.random() * (500)) + 1);
+  let shuffle = Math.round(Math.random());
+  let skip = Math.round(Math.random());
+  let songLength = (Math.floor((Math.random() * 3) + 1)) * 100;
 
 
   if (shuffle === 1 && skip === 0) {
@@ -116,6 +123,7 @@ app.get('/playClick', (req, res) => {
               db.query(`INSERT INTO userSongStatistics (user_id_users, date_id, shuffle_play_count, regular_play_count, shuffle_skip_count, regular_skip_count) VALUES (${user}, ${currentDateId}, 1, 0, 0, 0)`)
                 .catch(err => console.log(err))
                 .then(() => {
+                  // console.log('FINISHED INSERT SHUFFLE SKIP, REMOVE THI LATER');
                   res.status(201);
                   res.json();
                 });
@@ -130,6 +138,7 @@ app.get('/playClick', (req, res) => {
                 })
                 .catch(() => console.log('ERROR IN SONGSESSION'))
                 .then(() => {
+                  // console.log('FINISHED UPDATE SHUFFLE SKIP, REMOVE THIS LINE LATER');
                   res.status(201);
                   res.json();
                 })
@@ -206,7 +215,10 @@ app.get('/playClick', (req, res) => {
             }
           });
       });
-  } else {
+  } else if (shuffle === 0 && skip === 1) {
+    // console.log('easak');
+    // res.status(201);
+    // res.json();
     db.query(`SELECT date_id FROM calendar
               WHERE day = ${CurrentDay}
               AND month = ${CurrentMonth}
@@ -246,6 +258,8 @@ app.get('/playClick', (req, res) => {
             }
           });
       });
+  } else {
+    console.log('Something went wrong with data sent bac');
   }
 });
 
@@ -257,16 +271,18 @@ on query get user id and date
 
 */
 
-app.get('/searchQueries', (req, res) => {
+app.post('/searchQueries', (req, res) => {
 
   let fakeData = {
     user: (Math.floor(Math.random() * (1000)) + 1),
     query: faker.internet.domainWord()
   };
+  //
+  let user = req.body.user;
+  let query = req.body.query;
 
-  let user = fakeData.user;
-  let song = fakeData.song;
-  let query = fakeData.query;
+  // let user = fakeData.user;
+  // let query = fakeData.query;
 
   db.query(`SELECT date_id FROM calendar
             WHERE day = ${CurrentDay}
@@ -281,7 +297,7 @@ app.get('/searchQueries', (req, res) => {
           if (data.length === 0) {
             db.query(`INSERT INTO userQueryStatistics
                           (user_id_users, date_id, query_string)
-                          VALUES (${user}, ${currentDateId}, ${query})`)
+                          VALUES (${user}, ${currentDateId}, '${query}')`)
               .catch(err => console.log(err))
               .then(() => {
                 res.status(201);
@@ -304,34 +320,37 @@ app.get('/searchQueries', (req, res) => {
 });
 
 
-app.get('/songChunks', (req, res) => {
-
+app.post('/songChunks', (req, res) => {
+  //console.log(req.body);
   let fakeData = {
-    user: (Math.floor(Math.random() * (1000)) + 1),
+    user: (Math.floor(Math.random() * (10)) + 1),
     chunkLength: 10
   };
 
-  let user = fakeData.user;
-  let length = fakeData.chunkLength;
+  let user = req.body.user;
+  let length = req.body.chunkLength;
+  //
+  // let user = fakeData.user;
+  // let length = fakeData.chunkLength;
 
   db.query(`SELECT date_id FROM calendar
             WHERE day = ${CurrentDay}
             AND month = ${CurrentMonth}
             AND year = ${CurrentYear}`)
     .then((data) => {
-
       let currentDateId = data[0].date_id;
-
-      db.query(`SELECT * FROM songSession WHERE user_id_users = 1 AND date_id = ${currentDateId}`)
+      db.query(`SELECT * FROM songSession WHERE user_id_users = ${user} AND date_id = ${currentDateId}`)
         .then((data) => {
           let currentSongId = data[data.length - 1].id;
-
+          //console.log(currentSongId);
           db.query(`INSERT INTO songChunks (song_session_id, chunk_length) VALUES (${currentSongId}, ${length})`)
             .then(() => {
-              res.status(200);
+              res.status(201);
               res.json();
-            });
-        });
+            })
+            .catch(err => console.log('there is an error here'));
+        })
+        .catch(err => console.log('there is an error'));
     });
 });
 
