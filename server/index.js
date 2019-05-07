@@ -25,16 +25,6 @@ var CurrentYear = CurrentDateObj.getUTCFullYear();
 //GLOBAL USER STORAGE FOR INSTANT CHECK IF USER EXISTS;
 // let userStorage = {};
 
-
-
-/*####################### GLOBAL VARIABLES #######################*/
-
-
-
-
-
-
-
 app.get('/', (req, res) => {
   res.status(200);
   res.send('Welcome to some random ass home page');
@@ -57,32 +47,8 @@ update songStatistics
 
 ####################### PLAY CLICK #######################*/
 
-/*
-Take object from Will
-{userId: Value, SongID, ShufflePlay, SkipPlay}
-
-On a Play Click the following can happen
-
-// If new  user
-//   Insert user info into DB
-NO NEW USERS(apparently)
-
-Update userSongStatistics table
-  select Table based on user_id and date_id
-  UPDATE any of the counts
-
-Update songSessionTable
-  select table based on user_id and date_id
-  LOOKS LIKE THERE WILL BE DUPLICATES
-
-*/
-
 //example object {userId: value, songId, shufle: bool, skip:bool}
 app.post('/playClick', (req, res) => {
-  // console.log(req.body);
-  // console.log('DO I EVEN GET IN HERE???????????');
-  // console.log('hello');
-  // console.log(Number(req.body.user.StringValue));
   /*############################### MOCK DATA ###############################*/
   let fakeData = {
     user: (Math.floor(Math.random() * (1000)) + 1),
@@ -92,16 +58,6 @@ app.post('/playClick', (req, res) => {
     songLength: (Math.floor((Math.random() * 3) + 1)) * 100
   };
   /*############################### MOCK DATA ###############################*/
-  // let date = {};
-
-  //console.log(req.body);
-  //
-  // let user = (req.body.user);
-  // let song = (req.body.song);
-  // let shuffle = (req.body.shuffle);
-  // let skip = (req.body.skip);
-  // let songLength = (req.body.songLength);
-
   // USER TABLE INFORMATION
 
   let user = (Math.floor(Math.random() * (1000)) + 1);
@@ -216,9 +172,6 @@ app.post('/playClick', (req, res) => {
           });
       });
   } else if (shuffle === 0 && skip === 1) {
-    // console.log('easak');
-    // res.status(201);
-    // res.json();
     db.query(`SELECT date_id FROM calendar
               WHERE day = ${CurrentDay}
               AND month = ${CurrentMonth}
@@ -277,12 +230,8 @@ app.post('/searchQueries', (req, res) => {
     user: (Math.floor(Math.random() * (1000)) + 1),
     query: faker.internet.domainWord()
   };
-  //
   let user = req.body.user;
   let query = req.body.query;
-
-  // let user = fakeData.user;
-  // let query = fakeData.query;
 
   db.query(`SELECT date_id FROM calendar
             WHERE day = ${CurrentDay}
@@ -321,17 +270,12 @@ app.post('/searchQueries', (req, res) => {
 
 
 app.post('/songChunks', (req, res) => {
-  //console.log(req.body);
+  let user = req.body.user;
+  let length = req.body.chunkLength;
   let fakeData = {
     user: (Math.floor(Math.random() * (10)) + 1),
     chunkLength: 10
   };
-
-  let user = req.body.user;
-  let length = req.body.chunkLength;
-  //
-  // let user = fakeData.user;
-  // let length = fakeData.chunkLength;
 
   db.query(`SELECT date_id FROM calendar
             WHERE day = ${CurrentDay}
@@ -354,12 +298,6 @@ app.post('/songChunks', (req, res) => {
     });
 });
 
-// `UPDATE userSongStatistics
-// SET regular_skip_count = regular_skip_count + 1
-// WHERE user_id_users = ${user} AND date_id = ${currentDateId}`)
-// .catch(() => console.log('ERROR HERE'))
-
-
 /*
 #########################Types of Queries#########################
 Get shufflePlays for a day
@@ -369,13 +307,8 @@ Shuffle Vs RegularPlays?
 Get shufflePlays for a week
 ShuffleOlays for a week
 Shuffle Vs Regular for a week
-
-
-
-
 ##################################################################
 */
-
 
 
 app.listen(3000);
