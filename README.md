@@ -11,13 +11,6 @@ Unite 4 individual microservices
 Optimize service
 Answer business question
 
-# Table of Contents
-
-1. [Usage](#Usage)
-1. [Requirements](#requirements)
-1. [Development](#development)
-    1. [Installing Dependencies](#installing-dependencies)
-
 ## Usage
 
 > Clone Repo
