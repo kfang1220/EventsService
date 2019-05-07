@@ -1,14 +1,15 @@
-# Project Name
+# Shuffilify
 
-The project description
+The purpose of this project was to create a simulation of the popular application Spotify in order to - 
+Answer the business question, on a weekly/monthly basis, do users click shuffle play or regular play more often.
 
-## Roadmap
+#Goals
 
-View the project roadmap [here](LINK_TO_DOC)
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+Recreate the backend data flow of Spotify
+Either hit 10,000 RPS or a 10x Multiplier or initial rps.
+Unite 4 individual microservices
+Optimize service
+Answer business question
 
 # Table of Contents
 
@@ -16,20 +17,17 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 1. [Requirements](#requirements)
 1. [Development](#development)
     1. [Installing Dependencies](#installing-dependencies)
-    1. [Tasks](#tasks)
 
 ## Usage
 
-> Some usage instructions
-
-## Requirements
-
-- Node 6.9.x
-- Redis 3.2.x
-- Postgresql 9.6.x
-- etc
+> Clone Repo
+> npm install
+> Use artillery/Vegeta to test RPS
+> Run sqs.js/sqsfifo in order to test worker/queue system
+> 
 
 ## Other Information
 
-(TODO: fill this out with details about your project. Suggested ideas: architecture diagram, schema, and any other details from your app plan that sound interesting.)
+This project is soley for individual use. It would be hard for one to replicate the process without understanding the tools and purpose.
+Here is the architecture Diagram for the 4 services: https://www.lucidchart.com/documents/edit/69412583-4f2c-4c75-b35b-8997006b6725
 
